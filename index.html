@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f3d2e">
+<title>Scan nutrition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;
+  --bg:light-dark(#f6f7f4,#0e1311);--card:light-dark(#fff,#18201d);--ink:light-dark(#14201b,#e8eeea);
+  --mute:light-dark(#5b6b64,#9aaba3);--line:light-dark(#e2e7e3,#2a3530);--brand:#0f3d2e;--accent:#18a058;
+  --A:#038141;--B:#85bb2f;--C:#e6b800;--D:#ee8100;--E:#e63e11}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif;overflow-x:clip}
+header{background:var(--brand);color:#fff;padding:14px max(4vw,16px)}
+header h1{margin:0;font-size:20px;font-weight:800}
+header p{margin:2px 0 0;font-size:13px;opacity:.8}
+main{max-width:640px;margin:0 auto;padding:16px max(4vw,16px) 48px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.cam{position:relative;aspect-ratio:4/3;background:#000;border-radius:12px;overflow:hidden;display:none}
+.cam.on{display:block}
+.cam video{width:100%;height:100%;object-fit:cover}
+.cam .frame{position:absolute;inset:30% 12%;border:3px solid #fff;border-radius:10px;box-shadow:0 0 0 999px rgba(0,0,0,.35)}
+.cam .laser{position:absolute;left:12%;right:12%;top:50%;height:2px;background:#ff3b30;animation:sweep 1.6s ease-in-out infinite alternate}
+@keyframes sweep{from{transform:translateY(-40px)}to{transform:translateY(40px)}}
+@media (prefers-reduced-motion:reduce){.cam .laser{animation:none}}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button,.btn{font:600 16px Figtree,system-ui,sans-serif;min-height:48px;padding:0 18px;border-radius:12px;border:0;cursor:pointer;
+  background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+button.sec,.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,.btn:focus-within{outline:3px solid #6cc4ff;outline-offset:2px}
+.big{flex:1 1 100%}
+input[type=text]{flex:1 1 180px;font:16px Figtree,system-ui,sans-serif;min-height:48px;padding:0 14px;border-radius:12px;
+  border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.file{position:relative;overflow:hidden}
+.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.status{font-size:14px;color:var(--mute);margin:10px 0 0;min-height:1.5em}
+.status.err{color:var(--E)}
+.prod{display:flex;gap:14px;align-items:center}
+.prod img{width:72px;height:72px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--line);flex:none}
+.prod h2{margin:0;font-size:20px;line-height:1.2}
+.prod p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.scores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.score{border-radius:14px;padding:14px;color:#fff;position:relative}
+.score h3{margin:0;font-size:14px;font-weight:600;opacity:.95}
+.score .val{font-size:clamp(34px,10vw,48px);font-weight:800;line-height:1.05;margin-top:4px}
+.score .val small{font-size:16px;font-weight:600;opacity:.85}
+.score .grade{position:absolute;top:12px;right:14px;font-size:26px;font-weight:800;background:rgba(255,255,255,.22);
+  width:42px;height:42px;border-radius:10px;display:grid;place-items:center}
+.score .lbl{font-size:14px;margin-top:2px}
+.g-A{background:var(--A)}.g-B{background:var(--B)}.g-C{background:var(--C);color:#2a2100}.g-D{background:var(--D)}.g-E{background:var(--E)}.g-NA{background:#7a8580}
+h4{margin:18px 0 8px;font-size:15px}
+ul.why{list-style:none;margin:0;padding:0}
+ul.why li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+ul.why li b{white-space:nowrap;font-weight:600}
+.neg{color:var(--E)}.pos{color:var(--A)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:6px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tag{font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.hist{list-style:none;margin:0;padding:0}
+.hist li button{width:100%;justify-content:space-between;background:transparent;color:var(--ink);border-bottom:1px solid var(--line);
+  border-radius:0;padding:0 4px;font-weight:400;text-align:left}
+.hist .dots{display:flex;gap:4px;flex:none}
+.hist .dot{width:24px;height:24px;border-radius:6px;color:#fff;font:800 13px Figtree,sans-serif;display:grid;place-items:center}
+.hist span.n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.note{font-size:13px;color:var(--mute);margin:8px 0 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Scan nutrition</h1>
+  <p>Score diabète et score régime à partir du code-barres</p>
+</header>
+<main>
+  <section class="card" aria-label="Scanner">
+    <div class="cam" id="cam"><video id="video" playsinline muted></video><div class="frame"></div><div class="laser"></div></div>
+    <div class="row">
+      <button class="big" id="scanBtn" type="button">Scanner un produit</button>
+    </div>
+    <form class="row" id="manual">
+      <input type="text" id="code" inputmode="numeric" autocomplete="off" placeholder="Ou saisir le code (ex. 3017620422003)" aria-label="Code-barres">
+      <button type="submit" class="sec">Chercher</button>
+      <label class="btn sec file">Photo du code<input type="file" id="photo" accept="image/*" capture="environment"></label>
+    </form>
+    <p class="status" id="status" role="status"></p>
+  </section>
+
+  <section class="card hidden" id="result" aria-live="polite"></section>
+
+  <section class="card hidden" id="histCard">
+    <h4 style="margin-top:0">Derniers produits scannés</h4>
+    <ul class="hist" id="hist"></ul>
+  </section>
+
+  <p class="note">Données : Open Food Facts (base collaborative, peut contenir des erreurs). Les scores sont des repères calculés sur 100 g ou 100 ml ; ils ne remplacent pas l'avis d'un médecin ou d'un diététicien.</p>
+</main>
+
+<script>
+{
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+// 0 quand v <= good, 1 quand v >= bad, linéaire entre les deux
+const ramp = (v, good, bad) => clamp((v - good) / (bad - good), 0, 1);
+const grade = s => s == null ? 'NA' : s >= 80 ? 'A' : s >= 60 ? 'B' : s >= 40 ? 'C' : s >= 20 ? 'D' : 'E';
+const LABEL = {A:'Très adapté', B:'Adapté', C:'Avec modération', D:'Peu adapté', E:'À éviter', NA:'Données insuffisantes'};
+const fmt = (v, u) => v == null ? '—' : (Math.round(v * 10) / 10).toLocaleString('fr-FR') + ' ' + u;
+
+function readNutri(p) {
+  const n = p.nutriments || {};
+  const num = k => { const v = n[k]; return v === undefined || v === '' || isNaN(+v) ? null : +v; };
+  let kcal = num('energy-kcal_100g');
+  if (kcal == null && num('energy_100g') != null) kcal = num('energy_100g') / 4.184;
+  const cats = p.categories_tags || [];
+  const drink = cats.includes('en:beverages') && !cats.includes('en:plant-based-foods-and-beverages') || cats.includes('en:sodas');
+  return {
+    kcal, carbs: num('carbohydrates_100g'), sugars: num('sugars_100g'), fiber: num('fiber_100g') ?? 0,
+    protein: num('proteins_100g') ?? 0, fat: num('fat_100g'), sat: num('saturated-fat_100g') ?? 0,
+    salt: num('salt_100g'), nova: p.nova_group ? +p.nova_group : null, drink,
+    serving: p.serving_quantity ? +p.serving_quantity : null
+  };
+}
+
+// Score diabète : sucres, glucides nets, fibres, graisses saturées, ultra-transformation
+function diabetesScore(d) {
+  if (d.carbs == null && d.sugars == null) return null;
+  const sugars = d.sugars ?? 0, net = Math.max(0, (d.carbs ?? sugars) - d.fiber);
+  const f = [];
+  f.push(['Sucres', -30 * (d.drink ? ramp(sugars, 0.5, 8) : ramp(sugars, 5, 22.5)), fmt(sugars, 'g')]);
+  f.push(['Glucides nets (glucides − fibres)', -45 * (d.drink ? ramp(net, 1, 10) : ramp(net, 5, 45)), fmt(net, 'g')]);
+  f.push(['Graisses saturées', -10 * ramp(d.sat, 1, 5), fmt(d.sat, 'g')]);
+  if (d.nova) f.push(['Ultra-transformation (NOVA ' + d.nova + ')', d.nova === 4 ? -10 : d.nova === 3 ? -4 : 0, '']);
+  f.push(['Fibres', 10 * ramp(d.fiber, 0, 6), fmt(d.fiber, 'g')]);
+  f.push(['Protéines', 5 * ramp(d.protein, 3, 15), fmt(d.protein, 'g')]);
+  return finish(f);
+}
+
+// Score régime (perte de poids) : densité énergétique, sucres, gras saturés, satiété (protéines, fibres)
+function dietScore(d) {
+  if (d.kcal == null) return null;
+  const f = [];
+  f.push(['Densité calorique', -50 * (d.drink ? ramp(d.kcal, 2, 40) : ramp(d.kcal, 80, 400)), fmt(d.kcal, 'kcal')]);
+  f.push(['Sucres', -(d.drink ? 25 : 15) * (d.drink ? ramp(d.sugars ?? 0, 0.5, 8) : ramp(d.sugars ?? 0, 5, 22.5)), fmt(d.sugars, 'g')]);
+  f.push(['Graisses saturées', -15 * ramp(d.sat, 1, 6), fmt(d.sat, 'g')]);
+  if (d.nova) f.push(['Ultra-transformation (NOVA ' + d.nova + ')', d.nova === 4 ? -10 : d.nova === 3 ? -4 : 0, '']);
+  f.push(['Protéines (satiété)', 10 * ramp(d.protein, 5, 20), fmt(d.protein, 'g')]);
+  f.push(['Fibres (satiété)', 6 * ramp(d.fiber, 3, 8), fmt(d.fiber, 'g')]);
+  return finish(f);
+}
+
+function finish(f) {
+  const factors = f.map(([name, pts, val]) => ({name, pts: Math.round(pts), val})).filter(x => x.pts !== 0)
+    .sort((a, b) => Math.abs(b.pts) - Math.abs(a.pts));
+  const raw = 100 + f.reduce((s, x) => s + x[1], 0);
+  return {score: Math.round(clamp(raw, 0, 100)), factors};
+}
+
+function scoreCard(title, r) {
+  const g = grade(r?.score);
+  return `<div class="score g-${g}"><h3>${title}</h3><div class="val">${r ? r.score : '—'}<small>/100</small></div>
+    <div class="lbl">${LABEL[g]}</div><div class="grade">${g === 'NA' ? '?' : g}</div></div>`;
+}
+function whyList(r) {
+  if (!r) return '<p class="note">Valeurs nutritionnelles manquantes sur Open Food Facts.</p>';
+  if (!r.factors.length) return '<p class="note">Aucun point pénalisant.</p>';
+  return '<ul class="why">' + r.factors.map(x => `<li><span>${esc(x.name)}${x.val ? ' · ' + esc(x.val) : ''}</span>
+    <b class="${x.pts < 0 ? 'neg' : 'pos'}">${x.pts > 0 ? '+' : ''}${x.pts}</b></li>`).join('') + '</ul>';
+}
+
+function render(p, code) {
+  const d = readNutri(p), dia = diabetesScore(d), reg = dietScore(d);
+  const name = p.product_name_fr || p.product_name || 'Produit sans nom';
+  const unit = d.drink ? '100 ml' : '100 g';
+  const portion = d.serving && d.carbs != null
+    ? `<tr><td>Glucides par portion (${fmt(d.serving, d.drink ? 'ml' : 'g')})</td><td>${fmt(d.carbs * d.serving / 100, 'g')}</td></tr>` : '';
+  const tags = [];
+  if (p.nutriscore_grade && /^[a-e]$/.test(p.nutriscore_grade)) tags.push('Nutri-Score ' + p.nutriscore_grade.toUpperCase());
+  if (d.nova) tags.push('NOVA ' + d.nova);
+  if (p.quantity) tags.push(p.quantity);
+  tags.push('EAN ' + code);
+  const img = p.image_front_small_url || p.image_small_url;
+  $('#result').innerHTML = `
+    <div class="prod">${img ? `<img src="${esc(img)}" alt="">` : ''}
+      <div><h2>${esc(name)}</h2><p>${esc(p.brands || '')}</p></div></div>
+    <div class="scores">${scoreCard('Diabète', dia)}${scoreCard('Régime', reg)}</div>
+    <h4>Ce qui compte pour le score diabète</h4>${whyList(dia)}
+    <h4>Ce qui compte pour le score régime</h4>${whyList(reg)}
+    <h4>Valeurs pour ${unit}</h4>
+    <table>
+      <tr><td>Énergie</td><td>${fmt(d.kcal, 'kcal')}</td></tr>
+      <tr><td>Glucides</td><td>${fmt(d.carbs, 'g')}</td></tr>
+      <tr><td>dont sucres</td><td>${fmt(d.sugars, 'g')}</td></tr>
+      <tr><td>Fibres</td><td>${fmt(d.fiber, 'g')}</td></tr>
+      <tr><td>Protéines</td><td>${fmt(d.protein, 'g')}</td></tr>
+      <tr><td>Matières grasses</td><td>${fmt(d.fat, 'g')}</td></tr>
+      <tr><td>dont saturées</td><td>${fmt(d.sat, 'g')}</td></tr>
+      <tr><td>Sel</td><td>${fmt(d.salt, 'g')}</td></tr>${portion}
+    </table>
+    <div class="tags">${tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+    <p class="note"><a href="https://fr.openfoodfacts.org/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir ou corriger la fiche sur Open Food Facts</a></p>`;
+  $('#result').classList.remove('hidden');
+  $('#result').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  saveHist({code, name, dia: grade(dia?.score), reg: grade(reg?.score)});
+}
+
+const FIELDS = 'product_name,product_name_fr,brands,quantity,serving_quantity,image_front_small_url,image_small_url,nutriments,nova_group,nutriscore_grade,categories_tags';
+async function lookup(code) {
+  code = String(code).replace(/\D/g, '');
+  if (code.length < 8) return setStatus('Code-barres invalide.', true);
+  setStatus('Recherche du produit ' + code + '…');
+  try {
+    const res = await fetch(`https://world.openfoodfacts.org/api/v2/product/${code}.json?lc=fr&fields=${FIELDS}`);
+    const j = await res.json();
+    if (j.status !== 1 || !j.product) return setStatus('Produit introuvable dans Open Food Facts (' + code + ').', true);
+    setStatus('');
+    render(j.product, code);
+  } catch (e) { setStatus('Impossible de joindre Open Food Facts. Vérifiez la connexion.', true); }
+}
+function setStatus(t, err) { const s = $('#status'); s.textContent = t; s.classList.toggle('err', !!err); }
+
+// --- Historique (localStorage)
+const HK = 'scan-nutrition-hist';
+function loadHist() { try { return JSON.parse(localStorage.getItem(HK)) || []; } catch { return []; } }
+function saveHist(item) {
+  const h = [item, ...loadHist().filter(x => x.code !== item.code)].slice(0, 15);
+  try { localStorage.setItem(HK, JSON.stringify(h)); } catch {}
+  drawHist();
+}
+function drawHist() {
+  const h = loadHist();
+  $('#histCard').classList.toggle('hidden', !h.length);
+  $('#hist').innerHTML = h.map(x => `<li><button type="button" data-code="${esc(x.code)}"><span class="n">${esc(x.name)}</span>
+    <span class="dots"><span class="dot g-${esc(x.dia)}" title="Diabète">${x.dia === 'NA' ? '?' : esc(x.dia)}</span>
+    <span class="dot g-${esc(x.reg)}" title="Régime">${x.reg === 'NA' ? '?' : esc(x.reg)}</span></span></button></li>`).join('');
+}
+$('#hist').addEventListener('click', e => { const b = e.target.closest('button[data-code]'); if (b) lookup(b.dataset.code); });
+
+// --- Scanner caméra : BarcodeDetector natif (Android/Chrome) sinon ZXing (iOS/Safari, Firefox)
+const FORMATS = ['ean_13', 'ean_8', 'upc_a', 'upc_e'];
+let stream = null, zxReader = null, scanning = false;
+const video = $('#video');
+
+async function nativeDetector() {
+  if (!('BarcodeDetector' in window)) return null;
+  try {
+    const ok = await BarcodeDetector.getSupportedFormats();
+    const f = FORMATS.filter(x => ok.includes(x));
+    return f.length ? new BarcodeDetector({formats: f}) : null;
+  } catch { return null; }
+}
+function loadZXing() {
+  if (window.ZXing) return Promise.resolve();
+  return new Promise((ok, ko) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
+    s.onload = ok; s.onerror = () => ko(new Error('zxing'));
+    document.head.appendChild(s);
+  });
+}
+
+async function startScan() {
+  if (scanning) return stopScan();
+  if (!navigator.mediaDevices?.getUserMedia) return setStatus('Caméra indisponible : la page doit être ouverte en HTTPS. Utilisez la saisie ou la photo.', true);
+  scanning = true; $('#scanBtn').textContent = 'Arrêter'; $('#cam').classList.add('on');
+  setStatus('Placez le code-barres dans le cadre.');
+  const constraints = {video: {facingMode: 'environment', width: {ideal: 1280}, height: {ideal: 720}}};
+  try {
+    const det = await nativeDetector();
+    if (det) {
+      stream = await navigator.mediaDevices.getUserMedia(constraints);
+      video.srcObject = stream; await video.play();
+      const tick = async () => {
+        if (!scanning) return;
+        try { const r = await det.detect(video); if (r.length) return found(r[0].rawValue); } catch {}
+        setTimeout(tick, 150);
+      };
+      tick();
+    } else {
+      await loadZXing();
+      const hints = new Map();
+      hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [ZXing.BarcodeFormat.EAN_13, ZXing.BarcodeFormat.EAN_8, ZXing.BarcodeFormat.UPC_A, ZXing.BarcodeFormat.UPC_E]);
+      zxReader = new ZXing.BrowserMultiFormatReader(hints);
+      await zxReader.decodeFromConstraints(constraints, video, r => { if (r && scanning) found(r.getText()); });
+    }
+  } catch (e) {
+    stopScan();
+    setStatus(e && e.name === 'NotAllowedError' ? 'Accès à la caméra refusé. Autorisez-le dans les réglages du navigateur.' : 'Impossible de démarrer la caméra.', true);
+  }
+}
+function stopScan() {
+  scanning = false; $('#scanBtn').textContent = 'Scanner un produit'; $('#cam').classList.remove('on');
+  if (zxReader) { try { zxReader.reset(); } catch {} zxReader = null; }
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  video.srcObject = null;
+}
+function found(code) {
+  stopScan();
+  if (navigator.vibrate) navigator.vibrate(80);
+  $('#code').value = code;
+  lookup(code);
+}
+
+// --- Décodage depuis une photo
+async function decodePhoto(file) {
+  setStatus('Lecture de la photo…');
+  const url = URL.createObjectURL(file);
+  try {
+    const det = await nativeDetector();
+    if (det) {
+      const bmp = await createImageBitmap(file);
+      const r = await det.detect(bmp);
+      if (r.length) return found(r[0].rawValue);
+    }
+    await loadZXing();
+    const r = await new ZXing.BrowserMultiFormatReader().decodeFromImageUrl(url);
+    found(r.getText());
+  } catch { setStatus('Aucun code-barres lisible sur la photo. Essayez plus près, bien éclairé.', true); }
+  finally { URL.revokeObjectURL(url); }
+}
+
+$('#scanBtn').addEventListener('click', startScan);
+$('#manual').addEventListener('submit', e => { e.preventDefault(); lookup($('#code').value); });
+$('#photo').addEventListener('change', e => { const f = e.target.files[0]; if (f) decodePhoto(f); e.target.value = ''; });
+drawHist();
+// Permet les liens directs : index.html#3017620422003
+if (/^#\d{8,14}$/.test(location.hash)) lookup(location.hash.slice(1));
+window.__scores = {diabetesScore, dietScore, readNutri};
+}
+</script>
+</body>
+</html>
