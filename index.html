@@ -11,7 +11,8 @@
 :root{color-scheme:light dark;
   --bg:light-dark(#f6f7f4,#0e1311);--card:light-dark(#fff,#18201d);--ink:light-dark(#14201b,#e8eeea);
   --mute:light-dark(#5b6b64,#9aaba3);--line:light-dark(#e2e7e3,#2a3530);--brand:#0f3d2e;--accent:#18a058;
-  --A:#038141;--B:#85bb2f;--C:#e6b800;--D:#ee8100;--E:#e63e11}
+  --ex:#1e8f4e;--bon:#85bb2f;--med:#f39200;--mau:#e63e11;--na:#8a958f;
+  --good:#1e8f4e;--mid:#f39200;--bad:#e63e11}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif;overflow-x:clip}
 header{background:var(--brand);color:#fff;padding:14px max(4vw,16px)}
@@ -30,46 +31,65 @@ main{max-width:640px;margin:0 auto;padding:16px max(4vw,16px) 48px}
 button,.btn{font:600 16px Figtree,system-ui,sans-serif;min-height:48px;padding:0 18px;border-radius:12px;border:0;cursor:pointer;
   background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px}
 button.sec,.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
-button:focus-visible,input:focus-visible,.btn:focus-within{outline:3px solid #6cc4ff;outline-offset:2px}
+button:focus-visible,input:focus-visible,.btn:focus-within,summary:focus-visible{outline:3px solid #6cc4ff;outline-offset:2px}
 .big{flex:1 1 100%}
 input[type=text]{flex:1 1 180px;font:16px Figtree,system-ui,sans-serif;min-height:48px;padding:0 14px;border-radius:12px;
   border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .file{position:relative;overflow:hidden}
 .file input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .status{font-size:14px;color:var(--mute);margin:10px 0 0;min-height:1.5em}
-.status.err{color:var(--E)}
+.status.err{color:var(--bad)}
 .prod{display:flex;gap:14px;align-items:center}
 .prod img{width:72px;height:72px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--line);flex:none}
 .prod h2{margin:0;font-size:20px;line-height:1.2}
 .prod p{margin:2px 0 0;color:var(--mute);font-size:14px}
-.scores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
-.score{border-radius:14px;padding:14px;color:#fff;position:relative;display:block;width:100%;min-height:0;text-align:left;
-  font-weight:400;border:3px solid transparent;opacity:.55;transition:opacity .2s}
-.score[aria-selected=true]{opacity:1;border-color:var(--ink)}
-.score .hint{font-size:12px;margin-top:6px;opacity:.9}
-.exp{margin-top:16px}
-.exp .sum{font-size:17px;font-weight:600;margin:0 0 4px;line-height:1.4}
-.exp h5{margin:18px 0 6px;font-size:15px;display:flex;align-items:center;gap:8px}
-.exp h5::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--mute);flex:none}
-.exp h5.pro::before{background:var(--A)}.exp h5.con::before{background:var(--E)}.exp h5.tip::before{background:#2f7fd8}
+
+/* Cartes de score façon Yuka : pastille de couleur, note sur 100, appréciation */
+.scores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.score{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;align-items:center;width:100%;text-align:left;padding:10px;
+  background:var(--bg);color:var(--ink);border:2px solid var(--line);border-radius:14px;font-weight:400;min-height:0}
+.score[aria-selected=true]{border-color:var(--ink);background:var(--card)}
+.score .disc{grid-row:span 3;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 16px Figtree,sans-serif}
+.score h3{margin:0;font-size:13px;font-weight:600;color:var(--mute)}
+.score .word{font-size:16px;font-weight:800;line-height:1.15}
+.score .of{font-size:13px;color:var(--mute)}
+.c-ex{background:var(--ex)}.c-bon{background:var(--bon)}.c-med{background:var(--med)}.c-mau{background:var(--mau)}.c-na{background:var(--na)}
+
+.exp{margin-top:14px}
+.exp .intro{font-size:14px;color:var(--mute);margin:0 0 6px}
+.exp .sum{font-size:17px;font-weight:600;margin:0;line-height:1.4}
+.exp h5{margin:20px 0 4px;font-size:16px}
+/* Lignes de critères */
+ul.crit{list-style:none;margin:0;padding:0}
+ul.crit li{border-bottom:1px solid var(--line)}
+ul.crit summary{list-style:none;display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;min-height:56px;padding:6px 0;cursor:pointer}
+ul.crit summary::-webkit-details-marker{display:none}
+.dot{width:16px;height:16px;border-radius:50%;flex:none}
+.dot.good{background:var(--good)}.dot.mid{background:var(--mid)}.dot.bad{background:var(--bad)}
+.nm b{display:block;font-weight:600;font-size:16px;line-height:1.25}
+.nm small{display:block;color:var(--mute);font-size:14px;line-height:1.3}
+.v{font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.chev{width:9px;height:9px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);margin:0 4px 4px 0;transition:transform .2s}
+details[open]>summary .chev{transform:rotate(-135deg);margin:4px 4px 0 0}
+.more{padding:2px 0 14px 28px;font-size:15px;line-height:1.55}
+.more p{margin:8px 0 0}
+.gauge{position:relative;margin:6px 0 22px}
+.gauge .bar{display:flex;height:8px;border-radius:4px;overflow:hidden}
+.gauge .bar span{height:100%}
+.gauge .mk{position:absolute;top:-4px;width:4px;height:16px;border-radius:2px;background:var(--ink);transform:translateX(-2px)}
+.gauge .tk{position:absolute;top:12px;font-size:12px;color:var(--mute);transform:translateX(-50%);white-space:nowrap}
 .exp ul.pts{margin:0;padding:0 0 0 20px}
-.exp ul.pts li{margin:0 0 10px;font-size:15.5px;line-height:1.5}
-.exp ul.pts li strong{font-weight:600}
-details{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
-summary{cursor:pointer;font-weight:600;font-size:15px;min-height:44px;display:flex;align-items:center}
-details p{font-size:15px;margin:6px 0 10px}
-.score h3{margin:0;font-size:14px;font-weight:600;opacity:.95}
-.score .val{font-size:clamp(34px,10vw,48px);font-weight:800;line-height:1.05;margin-top:4px}
-.score .val small{font-size:16px;font-weight:600;opacity:.85}
-.score .grade{position:absolute;top:12px;right:14px;font-size:26px;font-weight:800;background:rgba(255,255,255,.22);
-  width:42px;height:42px;border-radius:10px;display:grid;place-items:center}
-.score .lbl{font-size:14px;margin-top:2px}
-.g-A{background:var(--A)}.g-B{background:var(--B)}.g-C{background:var(--C);color:#2a2100}.g-D{background:var(--D)}.g-E{background:var(--E)}.g-NA{background:#7a8580}
+.exp ul.pts li{margin:6px 0 8px;font-size:15.5px}
+.empty{font-size:15px;color:var(--mute);margin:4px 0 0}
+
 h4{margin:18px 0 8px;font-size:15px}
 ul.why{list-style:none;margin:0;padding:0}
 ul.why li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
 ul.why li b{white-space:nowrap;font-weight:600}
-.neg{color:var(--E)}.pos{color:var(--A)}
+.neg{color:var(--bad)}.pos{color:var(--good)}
+details.box{margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
+details.box>summary{cursor:pointer;font-weight:600;font-size:15px;min-height:44px;display:flex;align-items:center}
+details.box p{font-size:15px;margin:6px 0 10px}
 table{width:100%;border-collapse:collapse;font-size:15px}
 td{padding:6px 0;border-bottom:1px solid var(--line)}
 td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -78,11 +98,15 @@ td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-n
 .hist{list-style:none;margin:0;padding:0}
 .hist li button{width:100%;justify-content:space-between;background:transparent;color:var(--ink);border-bottom:1px solid var(--line);
   border-radius:0;padding:0 4px;font-weight:400;text-align:left}
-.hist .dots{display:flex;gap:4px;flex:none}
-.hist .dot{width:24px;height:24px;border-radius:6px;color:#fff;font:800 13px Figtree,sans-serif;display:grid;place-items:center}
+.hist .dots{display:flex;gap:6px;flex:none}
+.hist .hd{min-width:32px;height:26px;padding:0 6px;border-radius:13px;color:#fff;font:800 13px Figtree,sans-serif;display:grid;place-items:center}
 .hist span.n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .note{font-size:13px;color:var(--mute);margin:8px 0 0}
 .hidden{display:none}
+@media (max-width:340px){.score{grid-template-columns:1fr}.score .disc{grid-row:auto}}
+details.box>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);margin-left:auto;margin-right:4px}
+details.box[open]>summary::after{transform:rotate(-135deg)}
+details.box>summary{list-style:none}details.box>summary::-webkit-details-marker{display:none}
 </style>
 </head>
 <body>
@@ -97,7 +121,7 @@ td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-n
       <button class="big" id="scanBtn" type="button">Scanner un produit</button>
     </div>
     <form class="row" id="manual">
-      <input type="text" id="code" inputmode="numeric" autocomplete="off" placeholder="Ou saisir le code (ex. 3017620422003)" aria-label="Code-barres">
+      <input type="text" id="code" inputmode="numeric" autocomplete="off" placeholder="Ou saisir le code-barres" aria-label="Code-barres">
       <button type="submit" class="sec">Chercher</button>
       <label class="btn sec file">Photo du code<input type="file" id="photo" accept="image/*" capture="environment"></label>
     </form>
@@ -121,9 +145,25 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 // 0 quand v <= good, 1 quand v >= bad, linéaire entre les deux
 const ramp = (v, good, bad) => clamp((v - good) / (bad - good), 0, 1);
-const grade = s => s == null ? 'NA' : s >= 80 ? 'A' : s >= 60 ? 'B' : s >= 40 ? 'C' : s >= 20 ? 'D' : 'E';
-const LABEL = {A:'Très adapté', B:'Adapté', C:'Avec modération', D:'Peu adapté', E:'À éviter', NA:'Données insuffisantes'};
-const fmt = (v, u) => v == null ? '—' : (Math.round(v * 10) / 10).toLocaleString('fr-FR') + ' ' + u;
+const n1 = v => (Math.round(v * 10) / 10).toLocaleString('fr-FR');
+const n0 = v => Math.round(v).toLocaleString('fr-FR');
+const fmt = (v, u) => v == null ? '—' : n1(v) + ' ' + u;
+// Un morceau de sucre pèse environ 5 g
+const cubes = g => { const c = g / 5; return c < 0.75 ? 'moins d’un morceau de sucre' : c < 1.5 ? 'environ 1 morceau de sucre' : `environ ${n0(c)} morceaux de sucre`; };
+
+// Appréciation globale, même découpage que Yuka
+const LEVELS = [[75, 'ex', 'Excellent'], [50, 'bon', 'Bon'], [25, 'med', 'Médiocre'], [0, 'mau', 'Mauvais']];
+const level = s => { if (s == null) return {k: 'na', t: 'Données insuffisantes'}; const [, k, t] = LEVELS.find(([m]) => s >= m); return {k, t}; };
+
+// Seuils des pastilles pour 100 g (s) ou 100 ml (d) : [vert jusqu'à, orange jusqu'à], rouge au-delà
+const TH = {
+  sugars: {s: [5, 22.5], d: [1, 5]},
+  net:    {s: [15, 40],  d: [2, 8]},
+  fat:    {s: [3, 17.5], d: [1.5, 8.75]},
+  sat:    {s: [1.5, 5],  d: [0.75, 2.5]},
+  kcal:   {s: [150, 300], d: [5, 20]}
+};
+const lvl = (v, [a, b]) => v <= a ? 'good' : v <= b ? 'mid' : 'bad';
 
 function readNutri(p) {
   const n = p.nutriments || {};
@@ -132,42 +172,44 @@ function readNutri(p) {
   if (kcal == null && num('energy_100g') != null) kcal = num('energy_100g') / 4.184;
   const cats = p.categories_tags || [];
   const drink = cats.includes('en:beverages') && !cats.includes('en:plant-based-foods-and-beverages') || cats.includes('en:sodas');
-  return {
+  const d = {
     kcal, carbs: num('carbohydrates_100g'), sugars: num('sugars_100g'), fiber: num('fiber_100g') ?? 0,
     protein: num('proteins_100g') ?? 0, fat: num('fat_100g'), sat: num('saturated-fat_100g') ?? 0,
+    satKnown: num('saturated-fat_100g') != null, fiberKnown: num('fiber_100g') != null,
     salt: num('salt_100g'), nova: p.nova_group ? +p.nova_group : null, drink,
     serving: p.serving_quantity ? +p.serving_quantity : null,
     sweet: (p.additives_tags || []).some(t => /^en:e(95[0-2]|954|955|96[0-2]|969)/.test(t))
   };
+  d.u = drink ? '100 ml' : '100 g';
+  d.sug = d.sugars ?? 0;
+  d.net = Math.max(0, (d.carbs ?? d.sug) - d.fiber);
+  d.T = k => TH[k][drink ? 'd' : 's'];
+  return d;
 }
 
-// Score diabète : sucres, glucides nets, fibres, graisses saturées, ultra-transformation
+// ---------- Scores ----------
 function diabetesScore(d) {
   if (d.carbs == null && d.sugars == null) return null;
-  const sugars = d.sugars ?? 0, net = Math.max(0, (d.carbs ?? sugars) - d.fiber);
   const f = [];
-  f.push(['Sucres', -30 * (d.drink ? ramp(sugars, 0.5, 8) : ramp(sugars, 5, 22.5)), fmt(sugars, 'g')]);
-  f.push(['Glucides nets (glucides − fibres)', -45 * (d.drink ? ramp(net, 1, 10) : ramp(net, 5, 45)), fmt(net, 'g')]);
+  f.push(['Sucres', -35 * (d.drink ? ramp(d.sug, 0.5, 8) : ramp(d.sug, 5, 22.5)), fmt(d.sug, 'g')]);
+  f.push(['Glucides hors fibres', -55 * (d.drink ? ramp(d.net, 1, 10) : ramp(d.net, 5, 45)), fmt(d.net, 'g')]);
   f.push(['Graisses saturées', -10 * ramp(d.sat, 1, 5), fmt(d.sat, 'g')]);
-  if (d.nova) f.push(['Ultra-transformation (NOVA ' + d.nova + ')', d.nova === 4 ? -10 : d.nova === 3 ? -4 : 0, '']);
+  if (d.nova) f.push(['Transformation (NOVA ' + d.nova + ')', d.nova === 4 ? -10 : d.nova === 3 ? -4 : 0, '']);
   f.push(['Fibres', 10 * ramp(d.fiber, 0, 6), fmt(d.fiber, 'g')]);
   f.push(['Protéines', 5 * ramp(d.protein, 3, 15), fmt(d.protein, 'g')]);
   return finish(f);
 }
-
-// Score régime (perte de poids) : densité énergétique, sucres, gras saturés, satiété (protéines, fibres)
 function dietScore(d) {
   if (d.kcal == null) return null;
   const f = [];
-  f.push(['Densité calorique', -50 * (d.drink ? ramp(d.kcal, 2, 40) : ramp(d.kcal, 80, 400)), fmt(d.kcal, 'kcal')]);
-  f.push(['Sucres', -(d.drink ? 25 : 15) * (d.drink ? ramp(d.sugars ?? 0, 0.5, 8) : ramp(d.sugars ?? 0, 5, 22.5)), fmt(d.sugars, 'g')]);
+  f.push(['Calories', -60 * (d.drink ? ramp(d.kcal, 2, 40) : ramp(d.kcal, 60, 400)), fmt(d.kcal, 'kcal')]);
+  f.push(['Sucres', -(d.drink ? 25 : 15) * (d.drink ? ramp(d.sug, 0.5, 8) : ramp(d.sug, 5, 22.5)), fmt(d.sug, 'g')]);
   f.push(['Graisses saturées', -15 * ramp(d.sat, 1, 6), fmt(d.sat, 'g')]);
-  if (d.nova) f.push(['Ultra-transformation (NOVA ' + d.nova + ')', d.nova === 4 ? -10 : d.nova === 3 ? -4 : 0, '']);
-  f.push(['Protéines (satiété)', 10 * ramp(d.protein, 5, 20), fmt(d.protein, 'g')]);
-  f.push(['Fibres (satiété)', 6 * ramp(d.fiber, 3, 8), fmt(d.fiber, 'g')]);
+  if (d.nova) f.push(['Transformation (NOVA ' + d.nova + ')', d.nova === 4 ? -10 : d.nova === 3 ? -4 : 0, '']);
+  f.push(['Protéines', 10 * ramp(d.protein, 5, 20), fmt(d.protein, 'g')]);
+  f.push(['Fibres', 6 * ramp(d.fiber, 3, 8), fmt(d.fiber, 'g')]);
   return finish(f);
 }
-
 function finish(f) {
   const factors = f.map(([name, pts, val]) => ({name, pts: Math.round(pts), val})).filter(x => x.pts !== 0)
     .sort((a, b) => Math.abs(b.pts) - Math.abs(a.pts));
@@ -175,132 +217,178 @@ function finish(f) {
   return {score: Math.round(clamp(raw, 0, 100)), factors};
 }
 
-// ---------- Explications en langage courant ----------
-const n1 = v => (Math.round(v * 10) / 10).toLocaleString('fr-FR');
-const n0 = v => Math.round(v).toLocaleString('fr-FR');
-// Un morceau de sucre pèse environ 5 g
-const cubes = g => { const c = g / 5; return c < 0.75 ? 'moins d’un morceau de sucre' : c < 1.5 ? 'environ 1 morceau de sucre' : `environ ${n0(c)} morceaux de sucre`; };
-const unitOf = d => d.drink ? '100 ml' : '100 g';
+// ---------- Critères affichés en lignes (pastille + valeur + explication) ----------
+// gauge : {v, th:[a,b], rev} ; rev = plus c'est haut, mieux c'est (fibres, protéines)
+const NOVA = {1: ['good', 'Brut ou peu transformé'], 2: ['good', 'Ingrédient culinaire'], 3: ['mid', 'Transformé'], 4: ['bad', 'Ultra-transformé']};
+const NOVA_DEF = 'L’échelle NOVA classe les aliments selon leur degré de transformation, de 1 (brut : fruit, légume, viande, lait) à 4 (ultra-transformé : recette industrielle avec des ingrédients qu’on n’utilise pas en cuisine, comme des arômes, des additifs, des sirops ou des amidons modifiés).';
 
-function explainDiabetes(d, g) {
-  if (d.carbs == null && d.sugars == null) return null;
-  const u = unitOf(d), pros = [], cons = [], tips = [];
-  const sug = d.sugars ?? 0, net = Math.max(0, (d.carbs ?? sug) - d.fiber);
-  const hiSug = d.drink ? sug > 5 : sug > 22.5, midSug = d.drink ? sug > 0.5 : sug > 5;
-  const hiNet = d.drink ? net > 8 : net > 40, midNet = d.drink ? net > 2 : net > 15;
-
-  if (hiSug) cons.push(`<strong>Très sucré.</strong> ${n1(sug)} g de sucres pour ${u}, soit ${cubes(sug)}. ` + (d.drink
-    ? 'Dans une boisson, le sucre est déjà dissous : il n’y a rien à digérer, il passe dans le sang en quelques minutes et provoque un pic de glycémie rapide.'
-    : 'Ces sucres simples sont absorbés rapidement et font monter la glycémie vite et fort.'));
-  else if (midSug) cons.push(`<strong>Sucre en quantité modérée.</strong> ${n1(sug)} g de sucres pour ${u}, soit ${cubes(sug)}. Ce n’est pas excessif, mais cela s’ajoute au reste de la journée.`);
-  else pros.push(`<strong>Peu ou pas sucré.</strong> ${n1(sug)} g de sucres pour ${u}.`);
-
-  if (hiNet && hiSug && sug > net / 2) { /* déjà couvert par la ligne sur les sucres */ }
-  else if (hiNet) cons.push(sug > net / 2
-    ? `<strong>Beaucoup de glucides.</strong> ${n1(net)} g de glucides « nets » (glucides moins fibres) pour ${u}, en grande partie sous forme de sucres.`
-    : `<strong>Beaucoup de glucides, même s’il n’a pas un goût sucré.</strong> ${n1(net)} g de glucides « nets » (glucides moins fibres) pour ${u}. L’amidon, présent dans le pain, les pâtes, le riz, les biscuits ou les chips, est découpé en glucose pendant la digestion. Ce sont les glucides au total, et pas seulement les sucres, qui font monter la glycémie.`);
-  else if (midNet) cons.push(`<strong>Glucides en quantité moyenne.</strong> ${n1(net)} g de glucides nets pour ${u}. L’effet sur la glycémie dépend surtout de la quantité que vous en mangez.`);
-  else pros.push(`<strong>Pauvre en glucides.</strong> ${n1(net)} g de glucides nets pour ${u} : l’effet sur la glycémie est faible.`);
-
-  if (d.fiber >= 6) pros.push(`<strong>Riche en fibres.</strong> ${n1(d.fiber)} g pour ${u}. Les fibres ralentissent la digestion et le passage du glucose dans le sang : la glycémie monte plus lentement et moins haut.`);
-  else if (d.fiber >= 3) pros.push(`<strong>Source de fibres.</strong> ${n1(d.fiber)} g pour ${u}. Elles freinent un peu l’absorption des glucides.`);
-  else if (net > 15) cons.push(`<strong>Presque pas de fibres.</strong> ${n1(d.fiber)} g pour ${u}. Rien ne freine l’absorption des glucides, qui passent vite dans le sang.`);
-
-  if (d.protein >= 10) pros.push(`<strong>Bonne teneur en protéines.</strong> ${n1(d.protein)} g pour ${u}. Les protéines ralentissent la vidange de l’estomac, ce qui atténue la montée de la glycémie après le repas.`);
-
-  if (d.sat > 5) cons.push(`<strong>Riche en graisses saturées.</strong> ${n1(d.sat)} g pour ${u}. Elles n’agissent pas directement sur la glycémie. En revanche, le diabète augmente déjà le risque de maladies cardiovasculaires, et les graisses saturées l’augmentent aussi.`);
-
-  if (d.nova === 4) cons.push('<strong>Produit ultra-transformé (NOVA 4).</strong> Sa recette contient des ingrédients qu’on n’utilise pas en cuisine, comme des arômes, des additifs, des sirops ou des amidons modifiés. Les grandes études de population associent une consommation élevée de ces produits à un risque plus élevé de diabète de type 2.');
-  else if (d.nova === 1) pros.push('<strong>Aliment brut ou très peu transformé (NOVA 1).</strong>');
-
-  if (d.sweet) tips.push('Ce produit contient des édulcorants. Ils n’apportent pas de sucre et ne font pas monter la glycémie de façon notable.');
-  if (d.serving && d.carbs != null) tips.push(`Une portion de ${n0(d.serving)} ${d.drink ? 'ml' : 'g'} apporte ${n1(net * d.serving / 100)} g de glucides nets` +
-    (sug >= 1 ? `, dont ${n1(sug * d.serving / 100)} g de sucres (${cubes(sug * d.serving / 100)})` : '') + '. C’est ce chiffre qu’il faut retenir si vous comptez vos glucides.');
-  if (d.drink && hiSug) tips.push('Pour vous désaltérer, préférez l’eau, l’eau gazeuse ou une version sans sucre. Une boisson sucrée peut en revanche servir à corriger une hypoglycémie, si votre médecin vous l’a indiqué.');
-  else if (hiSug) tips.push('Si vous en mangez, prenez-le plutôt en fin de repas qu’en encas isolé. Les fibres, protéines et matières grasses du repas ralentissent l’absorption du sucre. Gardez une petite portion.');
-  else if (hiNet || (midNet && d.fiber < 3)) tips.push('Accompagnez-le de légumes et d’une source de protéines (poisson, viande, légumineuses, laitage) : le repas sera digéré plus lentement. Quand elle existe, une version complète ou aux céréales complètes est préférable.');
-  if (!cons.length) tips.push('Ce produit peut faire partie de vos repas sans précaution particulière pour la glycémie.');
-
-  const SUM = {A: 'Bon choix pour la glycémie.', B: 'Plutôt adapté, en faisant attention à la quantité.',
-    C: 'À consommer avec modération, en surveillant la portion.', D: 'Peu adapté : il fait monter la glycémie de façon notable.',
-    E: 'À éviter, sauf occasionnellement : il fait monter la glycémie fortement.'};
-  return {sum: SUM[g], pros, cons, tips};
+function commonRows(d, ctx) {
+  const rows = [];
+  const S = lvl(d.sat, d.T('sat'));
+  if (d.satKnown) rows.push({name: 'Graisses saturées', value: fmt(d.sat, 'g'), level: S,
+    qual: {good: 'Peu de graisses saturées', mid: 'Graisses saturées modérées', bad: 'Riche en graisses saturées'}[S],
+    gauge: {v: d.sat, th: d.T('sat')},
+    text: `${n1(d.sat)} g pour ${d.u}. Ce sont surtout les graisses d’origine animale (beurre, fromage, charcuterie) et les huiles de palme et de coco. ` +
+      (ctx === 'dia'
+        ? 'Elles n’agissent pas directement sur la glycémie. En revanche, le diabète augmente déjà le risque de maladies cardiovasculaires, et un excès de graisses saturées l’augmente aussi.'
+        : 'Elles comptent surtout pour la santé du cœur, indépendamment du poids.')});
+  if (d.nova) {
+    const [L, q] = NOVA[d.nova];
+    rows.push({name: 'Transformation', value: 'NOVA ' + d.nova, level: L, qual: q,
+      text: NOVA_DEF + (d.nova === 4 ? (ctx === 'dia'
+        ? ' Les grandes études de population associent une consommation élevée de produits ultra-transformés à un risque plus élevé de diabète de type 2.'
+        : ' Ces produits se mangent vite et facilement. Dans une étude contrôlée des National Institutes of Health américains (2019), les participants mangeaient spontanément environ 500 kcal de plus par jour avec une alimentation ultra-transformée qu’avec une alimentation peu transformée.') : '')});
+  }
+  return rows;
 }
 
-function explainDiet(d, g) {
-  if (d.kcal == null) return null;
-  const u = unitOf(d), pros = [], cons = [], tips = [];
-  const sug = d.sugars ?? 0, pct = `soit ${n0(d.kcal / 20)} % des apports d’une journée type à 2 000 kcal`;
-  const hiSug = d.drink ? sug > 5 : sug > 22.5;
+function diabetesRows(d) {
+  const rows = [], {sug, net, u} = d;
+  const S = lvl(sug, d.T('sugars')), N = lvl(net, d.T('net'));
+  rows.push({name: 'Sucres', value: fmt(sug, 'g'), level: S, qual: {good: 'Peu sucré', mid: 'Moyennement sucré', bad: 'Très sucré'}[S],
+    gauge: {v: sug, th: d.T('sugars')},
+    text: `${n1(sug)} g de sucres pour ${u}, soit ${cubes(sug)}. ` + (S === 'bad'
+      ? (d.drink ? 'Dans une boisson, le sucre est déjà dissous : il n’y a rien à digérer, il passe dans le sang en quelques minutes et provoque un pic de glycémie rapide.'
+                 : 'Ces sucres simples sont absorbés rapidement et font monter la glycémie vite et fort.')
+      : S === 'mid' ? 'Ce n’est pas excessif, mais cela s’ajoute aux autres sources de sucre de la journée.'
+      : 'Les sucres sont ce qui fait monter la glycémie le plus vite ; ici, il y en a peu.')});
+  // Ligne glucides masquée quand ce sont presque uniquement des sucres déjà signalés
+  if (!(S === 'bad' && N === 'bad' && sug > net / 2))
+    rows.push({name: 'Glucides', value: fmt(net, 'g'), level: N, qual: {good: 'Peu de glucides', mid: 'Glucides modérés', bad: 'Riche en glucides'}[N],
+      gauge: {v: net, th: d.T('net')},
+      text: `${n1(net)} g de glucides pour ${u}, sans compter les fibres (qui ne sont pas absorbées comme du sucre). ` + (N === 'bad'
+        ? (sug > net / 2 ? 'Une grande partie de ces glucides sont des sucres.'
+           : 'Même sans goût sucré, l’amidon (pain, pâtes, riz, biscuits, chips) est découpé en glucose pendant la digestion. Ce sont les glucides au total, et pas seulement les sucres, qui font monter la glycémie.')
+        : N === 'mid' ? 'L’effet sur la glycémie dépend surtout de la quantité que vous en mangez.'
+        : 'L’effet sur la glycémie est faible.')});
+  if (d.fiber >= 3) rows.push({name: 'Fibres', value: fmt(d.fiber, 'g'), level: 'good', qual: d.fiber >= 6 ? 'Riche en fibres' : 'Source de fibres',
+    gauge: {v: d.fiber, th: [3, 6], rev: true},
+    text: `${n1(d.fiber)} g pour ${u}. Les fibres ralentissent la digestion et le passage du glucose dans le sang : la glycémie monte plus lentement et moins haut.`});
+  else if (net > 15 && d.fiberKnown) rows.push({name: 'Fibres', value: fmt(d.fiber, 'g'), level: 'mid', qual: 'Peu de fibres',
+    gauge: {v: d.fiber, th: [3, 6], rev: true},
+    text: `${n1(d.fiber)} g pour ${u}. Rien ne freine l’absorption des glucides, qui passent vite dans le sang.`});
+  if (d.protein >= 10) rows.push({name: 'Protéines', value: fmt(d.protein, 'g'), level: 'good', qual: 'Riche en protéines',
+    gauge: {v: d.protein, th: [5, 10], rev: true},
+    text: `${n1(d.protein)} g pour ${u}. Les protéines ralentissent la vidange de l’estomac, ce qui atténue la montée de la glycémie après le repas.`});
+  return rows.concat(commonRows(d, 'dia'));
+}
 
-  if (d.drink) {
-    if (d.kcal > 20) cons.push(`<strong>Des calories qui ne rassasient pas.</strong> ${n0(d.kcal)} kcal pour 100 ml, soit ${n0(d.kcal * 2.5)} kcal pour un verre de 25 cl. Les calories bues ne calment pas la faim : on ne mange pas moins au repas suivant pour compenser.`);
-    else pros.push(`<strong>Très peu calorique.</strong> ${n1(d.kcal)} kcal pour 100 ml.`);
-  } else if (d.kcal < 100) pros.push(`<strong>Peu calorique.</strong> ${n0(d.kcal)} kcal pour 100 g. On peut en manger une portion qui remplit l’estomac pour peu de calories.`);
-  else if (d.kcal < 250) pros.push(`<strong>Calories modérées.</strong> ${n0(d.kcal)} kcal pour 100 g, ${pct}.`);
-  else if (d.kcal < 400) cons.push(`<strong>Assez calorique.</strong> ${n0(d.kcal)} kcal pour 100 g, ${pct}. La taille de la portion fait toute la différence.`);
-  else cons.push(`<strong>Très calorique.</strong> ${n0(d.kcal)} kcal pour 100 g, ${pct}. Une petite quantité apporte beaucoup d’énergie sans beaucoup remplir l’estomac.`);
-
-  if (d.fat != null && d.fat > 15 && d.kcal > 0) {
-    const share = Math.min(100, d.fat * 9 / d.kcal * 100);
-    if (share >= 50) cons.push(`<strong>Les matières grasses fournissent l’essentiel des calories.</strong> ${n1(d.fat)} g pour ${u}, soit environ ${n0(share)} % des calories du produit. Un gramme de gras apporte 9 kcal, contre 4 kcal pour un gramme de glucides ou de protéines.`);
+function dietRows(d) {
+  const rows = [], {sug, u} = d;
+  const K = lvl(d.kcal, d.T('kcal'));
+  rows.push({name: 'Calories', value: fmt(d.kcal, 'kcal'), level: K,
+    qual: d.drink ? {good: 'Sans calories ou presque', mid: 'Un peu calorique', bad: 'Calories liquides'}[K] : {good: 'Peu calorique', mid: 'Moyennement calorique', bad: 'Très calorique'}[K],
+    gauge: {v: d.kcal, th: d.T('kcal')},
+    text: d.drink
+      ? `${n1(d.kcal)} kcal pour 100 ml, soit ${n0(d.kcal * 2.5)} kcal pour un verre de 25 cl.` + (K !== 'good' ? ' Les calories bues ne calment pas la faim : on ne mange pas moins au repas suivant pour compenser.' : '')
+      : `${n0(d.kcal)} kcal pour 100 g, soit ${n0(d.kcal / 20)} % des apports d’une journée type à 2 000 kcal. ` + ({
+          good: 'Un aliment peu calorique permet de manger une portion qui remplit l’estomac pour peu de calories.',
+          mid: 'La taille de la portion fait la différence.',
+          bad: 'Une petite quantité apporte beaucoup d’énergie sans beaucoup remplir l’estomac.'})[K]});
+  if (d.fat != null) {
+    const F = lvl(d.fat, d.T('fat')), share = d.kcal > 0 ? Math.min(100, d.fat * 9 / d.kcal * 100) : 0;
+    rows.push({name: 'Matières grasses', value: fmt(d.fat, 'g'), level: F, qual: {good: 'Peu gras', mid: 'Moyennement gras', bad: 'Très gras'}[F],
+      gauge: {v: d.fat, th: d.T('fat')},
+      text: `${n1(d.fat)} g pour ${u}` + (d.kcal > 0 && d.fat > 0 ? `, soit environ ${n0(share)} % des calories du produit` : '') +
+        '. Un gramme de matières grasses apporte 9 kcal, contre 4 kcal pour un gramme de glucides ou de protéines.'});
   }
-  if (hiSug) cons.push(`<strong>Beaucoup de sucre.</strong> ${n1(sug)} g pour ${u}, soit ${cubes(sug)}. Le sucre apporte des calories sans rassasier, et la faim revient vite après le pic de glycémie.`);
-  if (d.sat > 6) cons.push(`<strong>Riche en graisses saturées.</strong> ${n1(d.sat)} g pour ${u}. À limiter pour la santé du cœur, indépendamment du poids.`);
-  if (d.protein >= 10) pros.push(`<strong>Riche en protéines.</strong> ${n1(d.protein)} g pour ${u}. Les protéines sont les nutriments qui rassasient le plus, et elles aident à préserver les muscles quand on mange moins.`);
-  if (d.fiber >= 3) pros.push(`<strong>Contient des fibres.</strong> ${n1(d.fiber)} g pour ${u}. Elles prennent de la place dans l’estomac et prolongent la sensation de satiété.`);
-  if (d.nova === 4) cons.push('<strong>Produit ultra-transformé (NOVA 4).</strong> Ces produits se mangent vite et facilement. Dans une étude contrôlée des National Institutes of Health américains (2019), les participants mangeaient spontanément environ 500 kcal de plus par jour avec une alimentation ultra-transformée qu’avec une alimentation peu transformée.');
-  else if (d.nova === 1) pros.push('<strong>Aliment brut ou très peu transformé (NOVA 1).</strong>');
+  const S = lvl(sug, d.T('sugars'));
+  rows.push({name: 'Sucres', value: fmt(sug, 'g'), level: S, qual: {good: 'Peu sucré', mid: 'Moyennement sucré', bad: 'Très sucré'}[S],
+    gauge: {v: sug, th: d.T('sugars')},
+    text: `${n1(sug)} g pour ${u}, soit ${cubes(sug)}. ` + (S === 'good' ? 'Peu de calories viennent du sucre.' : 'Le sucre apporte des calories sans rassasier, et la faim revient vite après le pic de sucre dans le sang.')});
+  if (d.protein >= 10) rows.push({name: 'Protéines', value: fmt(d.protein, 'g'), level: 'good', qual: 'Riche en protéines',
+    gauge: {v: d.protein, th: [5, 10], rev: true},
+    text: `${n1(d.protein)} g pour ${u}. Les protéines sont les nutriments qui rassasient le plus, et elles aident à préserver les muscles quand on mange moins.`});
+  if (d.fiber >= 3) rows.push({name: 'Fibres', value: fmt(d.fiber, 'g'), level: 'good', qual: d.fiber >= 6 ? 'Riche en fibres' : 'Source de fibres',
+    gauge: {v: d.fiber, th: [3, 6], rev: true},
+    text: `${n1(d.fiber)} g pour ${u}. Les fibres prennent de la place dans l’estomac et prolongent la sensation de satiété.`});
+  return rows.concat(commonRows(d, 'reg'));
+}
 
+// ---------- Conseils ----------
+function diabetesTips(d, rows) {
+  const tips = [], hiSug = lvl(d.sug, d.T('sugars')) === 'bad', N = lvl(d.net, d.T('net'));
+  if (d.serving && d.carbs != null) tips.push(`Une portion de ${n0(d.serving)} ${d.drink ? 'ml' : 'g'} apporte ${n1(d.net * d.serving / 100)} g de glucides` +
+    (d.sug >= 1 ? `, dont ${n1(d.sug * d.serving / 100)} g de sucres (${cubes(d.sug * d.serving / 100)})` : '') + '. C’est ce chiffre qu’il faut retenir si vous comptez vos glucides.');
+  if (d.drink && hiSug) tips.push('Pour vous désaltérer, préférez l’eau, l’eau gazeuse ou une version sans sucre. Une boisson sucrée peut en revanche servir à corriger une hypoglycémie, si votre médecin vous l’a indiqué.');
+  else if (hiSug) tips.push('Si vous en mangez, prenez-le plutôt en fin de repas qu’en encas isolé : les fibres, protéines et matières grasses du repas ralentissent l’absorption du sucre. Gardez une petite portion.');
+  else if (N === 'bad' || (N === 'mid' && d.fiber < 3)) tips.push('Accompagnez-le de légumes et d’une source de protéines (poisson, viande, légumineuses, laitage) : le repas sera digéré plus lentement. Quand elle existe, une version complète ou aux céréales complètes est préférable.');
+  if (d.sweet) tips.push('Ce produit contient des édulcorants. Ils n’apportent pas de sucre et ne font pas monter la glycémie de façon notable.');
+  if (!rows.some(r => r.level !== 'good')) tips.push('Ce produit peut faire partie de vos repas sans précaution particulière pour la glycémie.');
+  return tips;
+}
+function dietTips(d, rows) {
+  const tips = [];
   if (d.serving) tips.push(`Une portion de ${n0(d.serving)} ${d.drink ? 'ml' : 'g'} apporte ${n0(d.kcal * d.serving / 100)} kcal.`);
   if (d.drink && d.kcal > 20) tips.push('Remplacez-la par de l’eau, de l’eau gazeuse, une infusion ou une version sans sucre.');
-  if (!d.drink && d.kcal >= 400) tips.push(`Servez-vous une portion mesurée plutôt que de manger directement dans le paquet.${d.serving ? '' : ` À titre de repère, 30 g apportent ${n0(d.kcal * 0.3)} kcal.`}`);
+  if (!d.drink && d.kcal >= 400) tips.push('Servez-vous une portion mesurée plutôt que de manger directement dans le paquet.' + (d.serving ? '' : ` À titre de repère, 30 g apportent ${n0(d.kcal * 0.3)} kcal.`));
   if (!d.drink && d.kcal >= 250 && d.protein < 5 && d.fiber < 3) tips.push('Ce produit rassasie peu. Si vous en mangez, accompagnez-le de légumes ou d’une source de protéines pour tenir jusqu’au repas suivant.');
   if (d.kcal < 150 && d.protein >= 10) tips.push('Bon allié pour un repas ou un encas rassasiant à peu de calories.');
   if (d.sweet) tips.push('Ce produit contient des édulcorants. Ils n’apportent pas de calories, mais l’OMS recommande depuis 2023 de ne pas compter sur eux pour perdre du poids sur la durée.');
-  if (!cons.length) tips.push('Peut être consommé régulièrement dans le cadre d’un régime.');
-
-  const SUM = {A: 'Bon choix pour un régime.', B: 'Plutôt adapté, en gardant un œil sur la portion.',
-    C: 'Possible de temps en temps, en portion mesurée.', D: 'Peu adapté à un régime : beaucoup de calories pour peu de satiété.',
-    E: 'À éviter pendant un régime.'};
-  return {sum: SUM[g], pros, cons, tips};
+  if (!rows.some(r => r.level !== 'good')) tips.push('Peut être consommé régulièrement dans le cadre d’un régime.');
+  return tips;
 }
 
+const SUM = {
+  dia: {ex: 'Bon choix pour la glycémie.', bon: 'Plutôt adapté, en faisant attention à la quantité.',
+        med: 'À consommer avec modération : il fait monter la glycémie de façon notable.', mau: 'À éviter, sauf occasionnellement : il fait monter la glycémie fortement.'},
+  reg: {ex: 'Bon choix pour un régime.', bon: 'Plutôt adapté, en gardant un œil sur la portion.',
+        med: 'Possible de temps en temps, en portion mesurée.', mau: 'À éviter pendant un régime.'}
+};
+const INTRO = {
+  dia: 'Ce score estime l’effet du produit sur la glycémie, c’est-à-dire le taux de sucre dans le sang.',
+  reg: 'Ce score estime si le produit convient à un régime pour perdre du poids : calories, satiété et qualité.'
+};
+
+// ---------- Rendu ----------
+function gauge(g) {
+  const [a, b] = g.th, max = Math.max(b * 1.6, g.v * 1.1), pc = x => clamp(x / max * 100, 0, 100);
+  const cols = g.rev ? ['var(--mid)', 'var(--bon)', 'var(--good)'] : ['var(--good)', 'var(--mid)', 'var(--bad)'];
+  return `<div class="gauge" aria-hidden="true"><div class="bar"><span style="width:${pc(a)}%;background:${cols[0]}"></span>` +
+    `<span style="width:${pc(b) - pc(a)}%;background:${cols[1]}"></span><span style="flex:1;background:${cols[2]}"></span></div>` +
+    `<span class="mk" style="left:${pc(g.v)}%"></span><span class="tk" style="left:${pc(a)}%">${n1(a)}</span><span class="tk" style="left:${pc(b)}%">${n1(b)}</span></div>`;
+}
+const ORDER = {bad: 0, mid: 1, good: 2};
+function rowsHtml(rows) {
+  return '<ul class="crit">' + rows.map(r => `<li><details><summary>
+      <span class="dot ${r.level}" aria-hidden="true"></span>
+      <span class="nm"><b>${r.name}</b><small>${r.qual}</small></span>
+      <span class="v">${r.value}</span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="more">${r.gauge ? gauge(r.gauge) : ''}<p>${r.text}</p></div></details></li>`).join('') + '</ul>';
+}
 function scoreCard(id, title, r, selected) {
-  const g = grade(r?.score);
-  return `<button type="button" role="tab" id="tab-${id}" aria-controls="panel-${id}" aria-selected="${selected}" class="score g-${g}">
-    <h3>${title}</h3><div class="val">${r ? r.score : '—'}<small>/100</small></div>
-    <div class="lbl">${LABEL[g]}</div><div class="grade">${g === 'NA' ? '?' : g}</div>
-    <div class="hint">${selected ? 'Explications ci-dessous' : 'Toucher pour voir le détail'}</div></button>`;
-}
-const li = a => a.map(x => `<li>${x}</li>`).join('');
-function panel(id, r, e, selected, u) {
-  const body = !e ? '<p class="note">Les valeurs nutritionnelles nécessaires manquent sur Open Food Facts : impossible de calculer ce score.</p>' : `
-    <p class="sum">${e.sum}</p>
-    ${e.pros.length ? `<h5 class="pro">Points forts</h5><ul class="pts">${li(e.pros)}</ul>` : ''}
-    ${e.cons.length ? `<h5 class="con">Points faibles</h5><ul class="pts">${li(e.cons)}</ul>` : ''}
-    ${e.tips.length ? `<h5 class="tip">Conseils</h5><ul class="pts">${li(e.tips)}</ul>` : ''}
-    <details><summary>Détail du calcul (${r.score}/100)</summary>
-      <p>Le score part de 100. Chaque critère retire ou ajoute des points selon les valeurs pour ${u}.</p>${whyList(r)}</details>`;
-  return `<section class="exp" role="tabpanel" id="panel-${id}" aria-labelledby="tab-${id}"${selected ? '' : ' hidden'}>${body}</section>`;
+  const L = level(r?.score);
+  return `<button type="button" role="tab" id="tab-${id}" aria-controls="panel-${id}" aria-selected="${selected}" class="score">
+    <span class="disc c-${L.k}">${r ? r.score : '?'}</span><h3>${title}</h3><span class="word">${L.t}</span><span class="of">${r ? r.score + '/100' : ''}</span></button>`;
 }
 function whyList(r) {
-  if (!r) return '<p class="note">Valeurs nutritionnelles manquantes sur Open Food Facts.</p>';
-  if (!r.factors.length) return '<p class="note">Aucun point pénalisant.</p>';
   return '<ul class="why">' + r.factors.map(x => `<li><span>${esc(x.name)}${x.val ? ' · ' + esc(x.val) : ''}</span>
     <b class="${x.pts < 0 ? 'neg' : 'pos'}">${x.pts > 0 ? '+' : ''}${x.pts}</b></li>`).join('') + '</ul>';
+}
+function panel(id, r, rows, tips, selected, u) {
+  let body;
+  if (!r) body = '<p class="empty">Les valeurs nutritionnelles nécessaires manquent sur Open Food Facts : impossible de calculer ce score.</p>';
+  else {
+    const sorted = rows.slice().sort((x, y) => ORDER[x.level] - ORDER[y.level]);
+    const bad = sorted.filter(x => x.level !== 'good'), good = sorted.filter(x => x.level === 'good');
+    body = `<p class="intro">${INTRO[id]}</p><p class="sum">${SUM[id][level(r.score).k]}</p>
+      <h5>Défauts</h5>${bad.length ? rowsHtml(bad) : '<p class="empty">Aucun défaut notable.</p>'}
+      <h5>Qualités</h5>${good.length ? rowsHtml(good) : '<p class="empty">Aucune qualité notable.</p>'}
+      ${tips.length ? `<h5>Conseils</h5><ul class="pts">${tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+      <details class="box"><summary>Détail du calcul (${r.score}/100)</summary>
+        <p>Le score part de 100. Chaque critère retire ou ajoute des points selon les valeurs pour ${u}.</p>${whyList(r)}</details>`;
+  }
+  return `<section class="exp" role="tabpanel" id="panel-${id}" aria-labelledby="tab-${id}"${selected ? '' : ' hidden'}>${body}</section>`;
 }
 
 function render(p, code) {
   const d = readNutri(p), dia = diabetesScore(d), reg = dietScore(d);
-  const eDia = explainDiabetes(d, grade(dia?.score)), eReg = explainDiet(d, grade(reg?.score));
+  const rDia = diabetesRows(d), rReg = d.kcal == null ? [] : dietRows(d);
   const name = p.product_name_fr || p.product_name || 'Produit sans nom';
-  const unit = d.drink ? '100 ml' : '100 g';
   const portion = d.serving && d.carbs != null
     ? `<tr><td>Glucides par portion (${fmt(d.serving, d.drink ? 'ml' : 'g')})</td><td>${fmt(d.carbs * d.serving / 100, 'g')}</td></tr>` : '';
   const tags = [];
   if (p.nutriscore_grade && /^[a-e]$/.test(p.nutriscore_grade)) tags.push('Nutri-Score ' + p.nutriscore_grade.toUpperCase());
-  if (d.nova) tags.push('NOVA ' + d.nova);
   if (p.quantity) tags.push(p.quantity);
   tags.push('EAN ' + code);
   const img = p.image_front_small_url || p.image_small_url;
@@ -308,30 +396,28 @@ function render(p, code) {
     <div class="prod">${img ? `<img src="${esc(img)}" alt="">` : ''}
       <div><h2>${esc(name)}</h2><p>${esc(p.brands || '')}</p></div></div>
     <div class="scores" role="tablist" aria-label="Scores">${scoreCard('dia', 'Diabète', dia, true)}${scoreCard('reg', 'Régime', reg, false)}</div>
-    ${panel('dia', dia, eDia, true, unit)}${panel('reg', reg, eReg, false, unit)}
-    <details><summary>Comment lire ces scores</summary>
-      <p><strong>Glycémie</strong> : le taux de sucre dans le sang. Après un repas, les glucides sont transformés en glucose et la glycémie monte. Plus elle monte vite et haut, plus c’est difficile à gérer avec un diabète.</p>
-      <p><strong>Glucides nets</strong> : les glucides totaux moins les fibres. Les fibres ne sont pas absorbées comme du sucre, c’est pourquoi on les retire.</p>
-      <p><strong>Densité calorique</strong> : le nombre de calories pour 100 g. Les aliments peu denses (légumes, fruits, laitages nature, viandes maigres) permettent de manger à sa faim avec moins de calories.</p>
-      <p><strong>NOVA</strong> : le degré de transformation, de 1 (brut) à 4 (ultra-transformé).</p>
-      <p>Les scores vont de 0 à 100 : A à partir de 80, B à partir de 60, C à partir de 40, D à partir de 20, E en dessous. Ils jugent le produit pour 100 g ou 100 ml ; la quantité que vous mangez compte autant que le score.</p>
+    ${panel('dia', dia, rDia, dia ? diabetesTips(d, rDia) : [], true, d.u)}
+    ${panel('reg', reg, rReg, reg ? dietTips(d, rReg) : [], false, d.u)}
+    <details class="box"><summary>Toutes les valeurs nutritionnelles (${d.u})</summary>
+      <table>
+        <tr><td>Énergie</td><td>${fmt(d.kcal, 'kcal')}</td></tr>
+        <tr><td>Glucides</td><td>${fmt(d.carbs, 'g')}</td></tr>
+        <tr><td>dont sucres</td><td>${fmt(d.sugars, 'g')}</td></tr>
+        <tr><td>Fibres</td><td>${fmt(d.fiber, 'g')}</td></tr>
+        <tr><td>Protéines</td><td>${fmt(d.protein, 'g')}</td></tr>
+        <tr><td>Matières grasses</td><td>${fmt(d.fat, 'g')}</td></tr>
+        <tr><td>dont saturées</td><td>${fmt(d.sat, 'g')}</td></tr>
+        <tr><td>Sel</td><td>${fmt(d.salt, 'g')}</td></tr>${portion}
+      </table></details>
+    <details class="box"><summary>Comment lire les notes</summary>
+      <p>Chaque score va de 0 à 100 : <strong>Excellent</strong> à partir de 75, <strong>Bon</strong> de 50 à 74, <strong>Médiocre</strong> de 25 à 49, <strong>Mauvais</strong> en dessous de 25.</p>
+      <p>Les pastilles des lignes indiquent si la valeur est faible (vert), moyenne (orange) ou élevée (rouge) pour ${d.u}. Touchez une ligne pour voir la jauge et l’explication.</p>
     </details>
-    <h4>Valeurs pour ${unit}</h4>
-    <table>
-      <tr><td>Énergie</td><td>${fmt(d.kcal, 'kcal')}</td></tr>
-      <tr><td>Glucides</td><td>${fmt(d.carbs, 'g')}</td></tr>
-      <tr><td>dont sucres</td><td>${fmt(d.sugars, 'g')}</td></tr>
-      <tr><td>Fibres</td><td>${fmt(d.fiber, 'g')}</td></tr>
-      <tr><td>Protéines</td><td>${fmt(d.protein, 'g')}</td></tr>
-      <tr><td>Matières grasses</td><td>${fmt(d.fat, 'g')}</td></tr>
-      <tr><td>dont saturées</td><td>${fmt(d.sat, 'g')}</td></tr>
-      <tr><td>Sel</td><td>${fmt(d.salt, 'g')}</td></tr>${portion}
-    </table>
     <div class="tags">${tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
     <p class="note"><a href="https://fr.openfoodfacts.org/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir ou corriger la fiche sur Open Food Facts</a></p>`;
   $('#result').classList.remove('hidden');
   $('#result').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
-  saveHist({code, name, dia: grade(dia?.score), reg: grade(reg?.score)});
+  saveHist({code, name, dia: dia ? dia.score : null, reg: reg ? reg.score : null});
 }
 
 const FIELDS = 'product_name,product_name_fr,brands,quantity,serving_quantity,image_front_small_url,image_small_url,nutriments,nova_group,nutriscore_grade,categories_tags,additives_tags';
@@ -357,18 +443,20 @@ function saveHist(item) {
   try { localStorage.setItem(HK, JSON.stringify(h)); } catch {}
   drawHist();
 }
+function histDot(s, label) {
+  const v = typeof s === 'number' ? s : null, L = level(v);
+  return `<span class="hd c-${L.k}" title="${label} : ${L.t}">${v == null ? '?' : v}</span>`;
+}
 function drawHist() {
   const h = loadHist();
   $('#histCard').classList.toggle('hidden', !h.length);
   $('#hist').innerHTML = h.map(x => `<li><button type="button" data-code="${esc(x.code)}"><span class="n">${esc(x.name)}</span>
-    <span class="dots"><span class="dot g-${esc(x.dia)}" title="Diabète">${x.dia === 'NA' ? '?' : esc(x.dia)}</span>
-    <span class="dot g-${esc(x.reg)}" title="Régime">${x.reg === 'NA' ? '?' : esc(x.reg)}</span></span></button></li>`).join('');
+    <span class="dots">${histDot(x.dia, 'Diabète')}${histDot(x.reg, 'Régime')}</span></button></li>`).join('');
 }
 $('#result').addEventListener('click', e => {
   const t = e.target.closest('[role=tab]'); if (!t) return;
   for (const b of document.querySelectorAll('#result [role=tab]')) {
     const on = b === t; b.setAttribute('aria-selected', on);
-    b.querySelector('.hint').textContent = on ? 'Explications ci-dessous' : 'Toucher pour voir le détail';
     document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
   }
 });
@@ -463,7 +551,6 @@ $('#photo').addEventListener('change', e => { const f = e.target.files[0]; if (f
 drawHist();
 // Permet les liens directs : index.html#3017620422003
 if (/^#\d{8,14}$/.test(location.hash)) lookup(location.hash.slice(1));
-window.__scores = {diabetesScore, dietScore, readNutri};
 }
 </script>
 </body>
