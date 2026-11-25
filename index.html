@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#ffe8d4">
-<title>Scan nutrition</title>
+<title>Capybarr</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -139,7 +139,7 @@ details[open] .gauge .mk{animation:rise .35s .3s ease-out both}
 <body>
 <header>
   <span id="logo"></span>
-  <div><h1>Scan nutrition</h1><p>Diabète et régime, en un scan</p></div>
+  <div><h1>Capybarr</h1><p>Diabète et régime, en un scan</p></div>
 </header>
 <main>
   <section class="card" aria-label="Scanner">
@@ -157,7 +157,7 @@ details[open] .gauge .mk{animation:rise .35s .3s ease-out both}
 
   <section class="card hello" id="hello">
     <div class="talk"><span id="helloCapy"></span>
-      <div class="bubble"><b>Bonjour !</b>Scannez le code-barres d’un produit : je vous dis s’il convient en cas de diabète ou de régime.</div></div>
+      <div class="bubble"><b>Bonjour, je suis Capybarr !</b>Scannez le code-barres d’un produit : je vous dis s’il convient en cas de diabète ou de régime.</div></div>
   </section>
 
   <section class="card hidden" id="result" aria-live="polite"></section>
@@ -513,7 +513,7 @@ async function lookup(code) {
 function setStatus(t, err) { const s = $('#status'); s.textContent = t; s.classList.toggle('err', !!err); }
 
 // --- Historique (localStorage)
-const HK = 'scan-nutrition-hist';
+const HK = 'scan-nutrition-hist'; // clé conservée pour garder l'historique existant
 function loadHist() { try { return JSON.parse(localStorage.getItem(HK)) || []; } catch { return []; } }
 function saveHist(item) {
   const h = [item, ...loadHist().filter(x => x.code !== item.code)].slice(0, 15);
